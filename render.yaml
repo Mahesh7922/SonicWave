@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: sonicwave-api
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+  - type: static
+    name: sonicwave-client
+    buildCommand: npm install && npm run build
+    publishDir: ./client/dist
