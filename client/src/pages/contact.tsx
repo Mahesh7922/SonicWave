@@ -19,13 +19,13 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Call Us",
-    details: "+1 (555) 123-4567",
-    description: "Mon-Fri 9AM-6PM EST"
+    details: "+91 9876543210",
+    description: "Mon-Fri 9AM-6PM IST"
   },
   {
     icon: MapPin,
     title: "Visit Us",
-    details: "123 Audio Street, Sound City, SC 12345",
+    details: "Borivali(W), Mumbai, Maharashtra, India",
     description: "Our headquarters and showroom"
   },
   {
