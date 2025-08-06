@@ -92,3 +92,20 @@ export const loginSchema = z.object({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type LoginData = z.infer<typeof loginSchema>;
+
+// Update orders to link with users
+export const ordersWithUser = pgTable("orders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id),
+  sessionId: text("session_id"),
+  customerEmail: text("customer_email").notNull(),
+  customerName: text("customer_name").notNull(),
+  customerAddress: text("customer_address"),
+  customerCity: text("customer_city"),
+  customerPostal: text("customer_postal"),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  status: text("status").notNull().default("pending"),
+  paymentIntentId: text("payment_intent_id"),
+  trackingNumber: text("tracking_number"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});

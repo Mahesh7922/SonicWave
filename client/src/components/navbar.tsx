@@ -39,6 +39,8 @@ export default function Navbar() {
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/products", label: "Products" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
   ];
 
   return (
@@ -99,9 +101,16 @@ export default function Navbar() {
               <>
                 {isAuthenticated ? (
                   <div className="hidden md:flex items-center space-x-3">
-                    <span className="text-sm text-gray-300">
-                      Hi, {user?.firstName}
-                    </span>
+                    <Link href="/profile">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:text-[var(--sonic-blue)]"
+                      >
+                        <User className="h-4 w-4 mr-1" />
+                        {user?.firstName}
+                      </Button>
+                    </Link>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -177,9 +186,17 @@ export default function Navbar() {
                 <div className="pt-4 border-t border-gray-700">
                   {isAuthenticated ? (
                     <div className="space-y-2">
-                      <div className="text-sm text-gray-300 py-2">
-                        Hi, {user?.firstName}
-                      </div>
+                      <Link href="/profile">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start hover:text-[var(--sonic-blue)]"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <User className="h-4 w-4 mr-2" />
+                          Profile ({user?.firstName})
+                        </Button>
+                      </Link>
                       <Button
                         variant="ghost"
                         size="sm"
