@@ -1,4 +1,8 @@
 {
+  "dependencies": {
+    "vite": "^5.2.8",
+    "tsc": "^4.8.4"
+  },
   "scripts": {
     "start": "node index.js",
     "build": "tsc && vite build"
