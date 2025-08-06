@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "typescript": "4.8.4",
     "vite": "^5.2.8",
     "tsc": "^4.8.4"
   },
