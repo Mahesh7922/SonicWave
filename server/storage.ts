@@ -31,11 +31,14 @@ export interface IStorage {
   addOrderItem(item: InsertOrderItem): Promise<OrderItem>;
   getOrder(id: string): Promise<Order | undefined>;
   updateOrderStatus(id: string, status: string, paymentIntentId?: string): Promise<void>;
+  getOrderItems(orderId: string): Promise<OrderItem[]>;
   
   // Users
   createUser(user: InsertUser): Promise<User>;
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserById(id: string): Promise<User | undefined>;
+  updateUser(id: string, updates: Partial<InsertUser>): Promise<User | undefined>;
+  getUserOrders(userId: string): Promise<Order[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -249,6 +252,30 @@ export class MemStorage implements IStorage {
 
   async getUserById(id: string): Promise<User | undefined> {
     return this.users.get(id);
+  }
+
+  async updateUser(id: string, updates: Partial<InsertUser>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (user) {
+      const updatedUser = { ...user, ...updates, updatedAt: new Date() };
+      this.users.set(id, updatedUser);
+      return updatedUser;
+    }
+    return undefined;
+  }
+
+  async getUserOrders(userId: string): Promise<Order[]> {
+    // In memory implementation - find orders where user session matches or customerEmail matches user email
+    const user = this.users.get(userId);
+    if (!user) return [];
+    
+    return Array.from(this.orders.values()).filter(order => 
+      order.customerEmail === user.email
+    ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async getOrderItems(orderId: string): Promise<OrderItem[]> {
+    return Array.from(this.orderItems.values()).filter(item => item.orderId === orderId);
   }
 }
 

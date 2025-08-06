@@ -267,6 +267,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put("/api/auth/profile", async (req, res) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const updates = insertUserSchema.partial().parse(req.body);
+      const updatedUser = await storage.updateUser(req.session.userId, updates);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({
+        message: "Profile updated successfully",
+        user: { id: updatedUser.id, email: updatedUser.email, firstName: updatedUser.firstName, lastName: updatedUser.lastName }
+      });
+    } catch (error: any) {
+      res.status(400).json({ message: "Error updating profile: " + error.message });
+    }
+  });
+
+  app.get("/api/orders/user", async (req, res) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const orders = await storage.getUserOrders(req.session.userId);
+      
+      // Get order items for each order
+      const ordersWithItems = await Promise.all(
+        orders.map(async (order) => {
+          const items = Array.from(await storage.getOrderItems(order.id));
+          return { ...order, items };
+        })
+      );
+
+      res.json(ordersWithItems);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching orders: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
