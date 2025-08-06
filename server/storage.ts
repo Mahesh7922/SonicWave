@@ -6,7 +6,10 @@ import {
   type Order,
   type InsertOrder,
   type OrderItem,
-  type InsertOrderItem
+  type InsertOrderItem,
+  type User,
+  type InsertUser,
+  type LoginData
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -28,6 +31,11 @@ export interface IStorage {
   addOrderItem(item: InsertOrderItem): Promise<OrderItem>;
   getOrder(id: string): Promise<Order | undefined>;
   updateOrderStatus(id: string, status: string, paymentIntentId?: string): Promise<void>;
+  
+  // Users
+  createUser(user: InsertUser): Promise<User>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserById(id: string): Promise<User | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -35,12 +43,14 @@ export class MemStorage implements IStorage {
   private cartItems: Map<string, CartItem>;
   private orders: Map<string, Order>;
   private orderItems: Map<string, OrderItem>;
+  private users: Map<string, User>;
 
   constructor() {
     this.products = new Map();
     this.cartItems = new Map();
     this.orders = new Map();
     this.orderItems = new Map();
+    this.users = new Map();
     
     // Initialize with demo products
     this.initializeProducts();
@@ -219,6 +229,26 @@ export class MemStorage implements IStorage {
         order.paymentIntentId = paymentIntentId;
       }
     }
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = randomUUID();
+    const user: User = {
+      ...insertUser,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(id, user);
+    return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.email === email);
+  }
+
+  async getUserById(id: string): Promise<User | undefined> {
+    return this.users.get(id);
   }
 }
 

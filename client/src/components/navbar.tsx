@@ -1,15 +1,40 @@
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X, User, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
+import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { queryClient } from "@/lib/queryClient";
 
 export default function Navbar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { toggleCart, getTotalItems } = useCartStore();
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const { toast } = useToast();
   
   const totalItems = getTotalItems();
+
+  const handleLogout = async () => {
+    try {
+      await apiRequest("POST", "/api/auth/logout");
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+      });
+      window.location.href = "/";
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out",
+        variant: "destructive",
+      });
+    }
+  };
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -69,6 +94,48 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </motion.button>
+
+            {!isLoading && (
+              <>
+                {isAuthenticated ? (
+                  <div className="hidden md:flex items-center space-x-3">
+                    <span className="text-sm text-gray-300">
+                      Hi, {user?.firstName}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleLogout}
+                      className="hover:text-[var(--sonic-blue)]"
+                    >
+                      <LogOut className="h-4 w-4 mr-1" />
+                      Logout
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="hidden md:flex items-center space-x-2">
+                    <Link href="/login">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="hover:text-[var(--sonic-blue)]"
+                      >
+                        <User className="h-4 w-4 mr-1" />
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href="/signup">
+                      <Button 
+                        size="sm"
+                        className="bg-[var(--sonic-blue)] hover:bg-blue-600 text-black font-semibold rounded-full"
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </>
+            )}
             
             <button 
               className="md:hidden"
@@ -105,6 +172,50 @@ export default function Navbar() {
                   </a>
                 </Link>
               ))}
+              
+              {!isLoading && (
+                <div className="pt-4 border-t border-gray-700">
+                  {isAuthenticated ? (
+                    <div className="space-y-2">
+                      <div className="text-sm text-gray-300 py-2">
+                        Hi, {user?.firstName}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleLogout}
+                        className="w-full justify-start hover:text-[var(--sonic-blue)]"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Logout
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Link href="/login">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="w-full justify-start hover:text-[var(--sonic-blue)]"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <User className="h-4 w-4 mr-2" />
+                          Login
+                        </Button>
+                      </Link>
+                      <Link href="/signup">
+                        <Button 
+                          size="sm"
+                          className="w-full bg-[var(--sonic-blue)] hover:bg-blue-600 text-black font-semibold rounded-full"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          Sign Up
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
