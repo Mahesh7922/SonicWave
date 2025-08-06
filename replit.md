@@ -1,0 +1,63 @@
+# SonicWave E-commerce Platform
+
+## Overview
+
+SonicWave is a modern e-commerce platform specializing in premium headphones and audio equipment. The application features a sleek, dark-themed design with a complete shopping experience including product browsing, cart management, and Stripe payment integration. Built as a full-stack application with React frontend and Express backend, it demonstrates modern web development practices with TypeScript, responsive design, and smooth animations.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Architecture
+- **Framework**: React 18 with TypeScript for type safety and modern development
+- **Routing**: Wouter for lightweight client-side routing
+- **UI Components**: Radix UI primitives with shadcn/ui component system for consistent, accessible design
+- **Styling**: Tailwind CSS with custom CSS variables for theming and responsive design
+- **State Management**: Zustand for cart state with persistence, TanStack Query for server state
+- **Animations**: Framer Motion for smooth transitions and micro-interactions
+- **Build Tool**: Vite for fast development and optimized production builds
+
+### Backend Architecture
+- **Framework**: Express.js with TypeScript for API endpoints
+- **Database**: PostgreSQL with Drizzle ORM for type-safe database operations
+- **Database Provider**: Neon serverless PostgreSQL for scalable cloud database
+- **Storage Pattern**: Repository pattern with both in-memory and database implementations
+- **Payment Processing**: Stripe integration for secure payment handling
+- **Session Management**: Express sessions with PostgreSQL session store
+
+### Data Architecture
+- **ORM**: Drizzle with PostgreSQL dialect for schema definition and migrations
+- **Schema Validation**: Zod for runtime type validation integrated with Drizzle
+- **Type Sharing**: Shared TypeScript types between frontend and backend via `/shared` directory
+- **Database Tables**: Products, cart items, orders, and order items with proper foreign key relationships
+
+### Authentication & Security
+- **Session-based**: Express sessions for cart persistence across visits
+- **Payment Security**: Stripe Elements for PCI-compliant payment processing
+- **Environment Variables**: Secure configuration for API keys and database credentials
+
+### Development & Build Pipeline
+- **TypeScript**: Strict type checking across the entire application
+- **Hot Reload**: Vite HMR for frontend, tsx for backend development
+- **Build Process**: Vite for frontend bundling, esbuild for backend compilation
+- **Code Organization**: Monorepo structure with clear separation of concerns
+
+## External Dependencies
+
+### Core Dependencies
+- **Database**: Neon PostgreSQL serverless database
+- **Payment Processing**: Stripe API for payment intent creation and processing
+- **UI Framework**: Radix UI primitives for accessible component foundation
+- **Animation**: Framer Motion for page transitions and interactive elements
+
+### Development Tools
+- **Replit Integration**: Vite plugin for development environment and error handling
+- **Database Management**: Drizzle Kit for schema migrations and database operations
+- **Type Safety**: Zod for runtime validation and TypeScript for compile-time checking
+
+### Third-party Services
+- **Stripe**: Complete payment processing including webhooks for order status updates
+- **Environment Configuration**: Support for development and production environment variables
+- **Session Storage**: PostgreSQL-backed session management for user cart persistence
