@@ -54,7 +54,7 @@ export default function Products() {
                   className={`rounded-full px-6 py-2 transition-all duration-300 ${
                     selectedCategory === category
                       ? "bg-[var(--sonic-blue)] text-black hover:bg-blue-600"
-                      : "border-gray-600 hover:border-[var(--sonic-blue)] hover:text-[var(--sonic-blue)]"
+                      : "border-gray-600 text-black hover:border-[var(--sonic-blue)] hover:text-black hover:bg-[var(--sonic-blue)]"
                   }`}
                 >
                   {category}
