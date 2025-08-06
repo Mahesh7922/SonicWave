@@ -8,3 +8,5 @@ services:
     name: sonicwave-client
     buildCommand: npm install && npm run build
     publishDir: ./client/dist
+
+
